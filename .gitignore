@@ -1,0 +1,4 @@
+*.profile
+*.test
+build
+tags

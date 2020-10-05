@@ -8,29 +8,11 @@ import (
 	hl "gitlab.com/mjwhitta/hilighter"
 )
 
-var kernel32 *windows.LazyDLL
 var ntdll *windows.LazyDLL
 
 func init() {
-	// Load DLLs
-	kernel32 = windows.NewLazySystemDLL("kernel32")
+	// Load DLL
 	ntdll = windows.NewLazySystemDLL("ntdll")
-}
-
-// GetCurrentProcess from kernel32.
-func GetCurrentProcess() (pHndl windows.Handle, e error) {
-	var err uintptr
-	var tmp uintptr
-
-	tmp, err, _ = kernel32.NewProc("GetCurrentProcess").Call()
-	if err != 0 {
-		e = hl.Errorf("GetCurrentProcess returned %0x", uint32(err))
-	} else {
-		e = nil
-		pHndl = windows.Handle(tmp)
-	}
-
-	return
 }
 
 // NtAllocateVirtualMemory from ntdll.

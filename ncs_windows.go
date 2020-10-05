@@ -21,10 +21,7 @@ func WithNtCreateSection(pid uint32, sc []byte) error {
 	}
 
 	// Get process handle
-	if pHndl, e = GetCurrentProcess(); e != nil {
-		return e
-	}
-	defer windows.CloseHandle(pHndl)
+	pHndl = windows.CurrentProcess()
 
 	// Get handle for section object
 	e = NtCreateSection(

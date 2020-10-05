@@ -21,15 +21,13 @@ func WithNtAllocateVirtualMemory(pid uint32, sc []byte) error {
 
 	// Get process handle
 	if pid == 0 {
-		if pHndl, e = GetCurrentProcess(); e != nil {
-			return e
-		}
+		pHndl = windows.CurrentProcess()
 	} else {
 		if pHndl, e = NtOpenProcess(pid, ProcessAllAccess); e != nil {
 			return e
 		}
+		defer windows.CloseHandle(pHndl)
 	}
-	defer windows.CloseHandle(pHndl)
 
 	// Allocate memory
 	addr, e = NtAllocateVirtualMemory(

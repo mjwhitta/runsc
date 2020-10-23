@@ -1,4 +1,7 @@
 *.profile
 *.test
 build
+cmd/*
+!cmd/runsc
+local
 tags

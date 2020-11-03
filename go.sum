@@ -4,5 +4,5 @@ gitlab.com/mjwhitta/hilighter v1.9.1 h1:YlUCB1jWYVtwwfQ4DFvwXULmvH3Bu9ELlTkS5+jz
 gitlab.com/mjwhitta/hilighter v1.9.1/go.mod h1:/hkHOgezVQbk/eoif5CRCK2/N0aeEK40VQh8znGsjpE=
 gitlab.com/mjwhitta/log v1.4.2 h1:xrz+imhjjz+v+8djmbCXMSX5Hz88IIbV0ZzFbvXeaeM=
 gitlab.com/mjwhitta/log v1.4.2/go.mod h1:iOdtHoTqI7dSVZMazfnz8Ap5GPHNHkeuzzJO2DNAAYU=
-golang.org/x/sys v0.0.0-20200929083018-4d22bbb62b3c h1:/h0vtH0PyU0xAoZJVcRw1k0Ng+U0JAy3QDiFmppIlIE=
-golang.org/x/sys v0.0.0-20200929083018-4d22bbb62b3c/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20201101102859-da207088b7d1 h1:a/mKvvZr9Jcc8oKfcmgzyp7OwF73JPWsQLvH1z2Kxck=
+golang.org/x/sys v0.0.0-20201101102859-da207088b7d1/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

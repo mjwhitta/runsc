@@ -11,7 +11,7 @@ import (
 var ntdll *windows.LazyDLL
 
 func init() {
-	// Load DLL
+	// Load DLLs
 	ntdll = windows.NewLazySystemDLL("ntdll")
 }
 
@@ -128,14 +128,81 @@ func NtOpenProcess(
 		uintptr(unsafe.Pointer(&clientID{uintptr(pid), 0})),
 	)
 	if err != 0 {
-		e = hl.Errorf("ntOpenProcess returned %0x", uint32(err))
+		e = hl.Errorf("NtOpenProcess returned %0x", uint32(err))
 	} else if pHndl == 0 {
-		e = hl.Errorf("ntOpenProcess failed for unknown reason")
+		e = hl.Errorf("NtOpenProcess failed for unknown reason")
 	} else {
 		e = nil
 	}
 
 	return
+}
+
+// NtQueueApcThread from ntdll.
+func NtQueueApcThread(
+	tHndl windows.Handle,
+	apcRoutine uintptr,
+) error {
+	var err uintptr
+
+	err, _, _ = ntdll.NewProc("NtQueueApcThread").Call(
+		uintptr(tHndl),
+		apcRoutine,
+		0, // arg1
+		0, // arg2
+		0, // arg3
+	)
+	if err != 0 {
+		return hl.Errorf(
+			"NtQueueApcThread returned: %0x",
+			uint32(err),
+		)
+	}
+
+	return nil
+}
+
+// NtQueueApcThreadEx from ntdll.
+func NtQueueApcThreadEx(
+	tHndl windows.Handle,
+	apcRoutine uintptr,
+) error {
+	var err uintptr
+
+	err, _, _ = ntdll.NewProc("NtQueueApcThreadEx").Call(
+		uintptr(tHndl),
+		0x1, // userApcReservedHandle
+		apcRoutine,
+		0, // arg1
+		0, // arg2
+		0, // arg3
+	)
+	if err != 0 {
+		return hl.Errorf(
+			"NtQueueApcThreadEx returned: %0x",
+			uint32(err),
+		)
+	}
+
+	return nil
+}
+
+// NtResumeThread from ntdll.
+func NtResumeThread(tHndl windows.Handle) error {
+	var err uintptr
+
+	err, _, _ = ntdll.NewProc("NtResumeThread").Call(
+		uintptr(tHndl),
+		0, // previousSuspendCount
+	)
+	if err != 0 {
+		return hl.Errorf(
+			"NtResumeThread returned: %0x",
+			uint32(err),
+		)
+	}
+
+	return nil
 }
 
 // NtWriteVirtualMemory from ntdll.

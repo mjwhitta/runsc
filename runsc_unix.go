@@ -13,3 +13,13 @@ func WithNtAllocateVirtualMemory(pid uint32, sc []byte) error {
 func WithNtCreateSection(pid uint32, sc []byte) error {
 	return hl.Errorf("Unsupported OS")
 }
+
+// WithNtQueueApcThread is only supported for Windows
+func WithNtQueueApcThread(pid uint32, sc []byte) error {
+	return hl.Errorf("Unsupported OS")
+}
+
+// WithNtQueueApcThreadEx is only supported for Windows
+func WithNtQueueApcThreadEx(pid uint32, sc []byte) error {
+	return hl.Errorf("Unsupported OS")
+}

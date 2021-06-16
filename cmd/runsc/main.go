@@ -59,6 +59,16 @@ func main() {
 			if e = runsc.WithNtCreateSection(pid, sc); e != nil {
 				panic(e)
 			}
+		case "nqat", "ntqueueapcthread":
+			log.Info("Launching calc with NtQueueApcThread")
+			if e = runsc.WithNtQueueApcThread(pid, sc); e != nil {
+				panic(e)
+			}
+		case "nqate", "ntqueueapcthreadex":
+			log.Info("Launching calc with NtQueueApcThreadEx")
+			if e = runsc.WithNtQueueApcThreadEx(pid, sc); e != nil {
+				panic(e)
+			}
 		default:
 			panic(hl.Errorf("Unsupported method"))
 		}

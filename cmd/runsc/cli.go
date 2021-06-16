@@ -54,7 +54,9 @@ func init() {
 		strings.Join(
 			[]string{
 				"navm: NtAllocateVirtualMemory",
-				"ncs:  NtCreateSection",
+				"ncs: NtCreateSection",
+				"nqat: NtQueueApcThread",
+				"nqate: NtQueueApcThreadEx",
 			},
 			"\n",
 		),

@@ -1,5 +1,13 @@
 package main
 
+// https://github.com/peterferrie/win-exec-calc-shellcode
+// var calc = []string{
+// 	"50515253565755506a605a6863616c6354594829d465488b32488b7618488b",
+// 	"761048ad488b30488b7e3003573c8b5c17288b741f204801fe8b541f240fb7",
+// 	"2c178d5202ad813c0757696e4575ef8b741f1c4801fe8b34ae4801f799ffd7",
+// 	"4883c4705d5f5e5b5a5958c3",
+// }
+
 // msfvenom -f hex -p windows/x64/exec CMD=calc EXITFUNC=thread | \
 // tail -n 1 | sed -r "s/((..){,31})/\"\1\",\n/g"
 var calc = []string{

@@ -14,7 +14,7 @@ API (specifically functions that are not hooked by EDR solutions).
 Open a terminal and run the following:
 
 ```
-$ go get -u gitlab.com/mjwhitta/runsc
+$ go get --ldflags="-s -w" --trimpath -u gitlab.com/mjwhitta/runsc
 ```
 
 ## Usage

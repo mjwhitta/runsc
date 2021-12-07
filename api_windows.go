@@ -23,8 +23,9 @@ func NtAllocateVirtualMemory(
 	protection uintptr,
 ) (addr uintptr, e error) {
 	var err uintptr
+	var proc string = "NtAllocateVirtualMemory"
 
-	err, _, _ = ntdll.NewProc("NtAllocateVirtualMemory").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(pHndl),
 		uintptr(unsafe.Pointer(&addr)),
 		0,
@@ -33,14 +34,9 @@ func NtAllocateVirtualMemory(
 		protection,
 	)
 	if err != 0 {
-		e = hl.Errorf(
-			"NtAllocateVirtualMemory returned %0x",
-			uint32(err),
-		)
+		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
 	} else if addr == 0 {
-		e = hl.Errorf(
-			"NtAllocateVirtualMemory failed for unknown reason",
-		)
+		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
 	} else {
 		e = nil
 	}
@@ -61,8 +57,9 @@ func NtCreateSection(
 	secPerms uintptr,
 ) error {
 	var err uintptr
+	var proc string = "NtCreateSection"
 
-	err, _, _ = ntdll.NewProc("NtCreateSection").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(unsafe.Pointer(sHndl)),
 		access,
 		0,
@@ -72,9 +69,9 @@ func NtCreateSection(
 		0,
 	)
 	if err != 0 {
-		return hl.Errorf("NtCreateSection returned %0x", uint32(err))
+		return hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
 	} else if *sHndl == 0 {
-		return hl.Errorf("NtCreateSection failed for unknown reason")
+		return hl.Errorf("runsc: %s failed for unknown reason", proc)
 	}
 
 	return nil
@@ -89,9 +86,10 @@ func NtMapViewOfSection(
 	pagePerms uintptr,
 ) (scBase uintptr, e error) {
 	var err uintptr
+	var proc string = "NtMapViewOfSection"
 	var scOffset uintptr
 
-	err, _, _ = ntdll.NewProc("NtMapViewOfSection").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(sHndl),
 		uintptr(pHndl),
 		uintptr(unsafe.Pointer(&scBase)),
@@ -104,9 +102,9 @@ func NtMapViewOfSection(
 		pagePerms,
 	)
 	if err != 0 {
-		e = hl.Errorf("NtMapViewOfSection returned %0x", uint32(err))
+		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
 	} else if scBase == 0 {
-		e = hl.Errorf("NtMapViewOfSection failed for unknown reason")
+		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
 	} else {
 		e = nil
 	}
@@ -120,17 +118,18 @@ func NtOpenProcess(
 	access uintptr,
 ) (pHndl windows.Handle, e error) {
 	var err uintptr
+	var proc string = "NtOpenProcess"
 
-	err, _, _ = ntdll.NewProc("NtOpenProcess").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(unsafe.Pointer(&pHndl)),
 		access,
 		uintptr(unsafe.Pointer(&objectAttrs{0, 0, 0, 0, 0, 0})),
 		uintptr(unsafe.Pointer(&clientID{uintptr(pid), 0})),
 	)
 	if err != 0 {
-		e = hl.Errorf("NtOpenProcess returned %0x", uint32(err))
+		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
 	} else if pHndl == 0 {
-		e = hl.Errorf("NtOpenProcess failed for unknown reason")
+		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
 	} else {
 		e = nil
 	}
@@ -144,8 +143,9 @@ func NtQueueApcThread(
 	apcRoutine uintptr,
 ) error {
 	var err uintptr
+	var proc string = "NtQueueApcThread"
 
-	err, _, _ = ntdll.NewProc("NtQueueApcThread").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(tHndl),
 		apcRoutine,
 		0, // arg1
@@ -153,10 +153,7 @@ func NtQueueApcThread(
 		0, // arg3
 	)
 	if err != 0 {
-		return hl.Errorf(
-			"NtQueueApcThread returned: %0x",
-			uint32(err),
-		)
+		return hl.Errorf("runsc: %s returned: %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -168,8 +165,9 @@ func NtQueueApcThreadEx(
 	apcRoutine uintptr,
 ) error {
 	var err uintptr
+	var proc string = "NtQueueApcThreadEx"
 
-	err, _, _ = ntdll.NewProc("NtQueueApcThreadEx").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(tHndl),
 		0x1, // userApcReservedHandle
 		apcRoutine,
@@ -178,10 +176,7 @@ func NtQueueApcThreadEx(
 		0, // arg3
 	)
 	if err != 0 {
-		return hl.Errorf(
-			"NtQueueApcThreadEx returned: %0x",
-			uint32(err),
-		)
+		return hl.Errorf("runsc: %s returned: %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -190,16 +185,14 @@ func NtQueueApcThreadEx(
 // NtResumeThread from ntdll.
 func NtResumeThread(tHndl windows.Handle) error {
 	var err uintptr
+	var proc string = "NtResumeThread"
 
-	err, _, _ = ntdll.NewProc("NtResumeThread").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(tHndl),
 		0, // previousSuspendCount
 	)
 	if err != 0 {
-		return hl.Errorf(
-			"NtResumeThread returned: %0x",
-			uint32(err),
-		)
+		return hl.Errorf("runsc: %s returned: %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -212,18 +205,16 @@ func NtWriteVirtualMemory(
 	b []byte,
 ) error {
 	var err uintptr
+	var proc string = "NtWriteVirtualMemory"
 
-	err, _, _ = ntdll.NewProc("NtWriteVirtualMemory").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(pHndl),
 		dst,
 		uintptr(unsafe.Pointer(&b[0])),
 		uintptr(len(b)),
 	)
 	if err != 0 {
-		return hl.Errorf(
-			"NtWriteVirtualMemory returned %0x",
-			uint32(err),
-		)
+		return hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -236,13 +227,14 @@ func RtlCreateUserThread(
 	sspnd bool,
 ) (tHndl windows.Handle, e error) {
 	var err uintptr
+	var proc string = "RtlCreateUserThread"
 	var suspend uintptr
 
 	if sspnd {
 		suspend = 1
 	}
 
-	err, _, _ = ntdll.NewProc("RtlCreateUserThread").Call(
+	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(pHndl),
 		0,
 		suspend,
@@ -255,9 +247,9 @@ func RtlCreateUserThread(
 		0,
 	)
 	if err != 0 {
-		e = hl.Errorf("RtlCreateUserThread returned %0x", uint32(err))
+		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
 	} else if tHndl == 0 {
-		e = hl.Errorf("RtlCreateUserThread failed for unknown reason")
+		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
 	} else {
 		e = nil
 	}

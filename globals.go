@@ -1,19 +1,5 @@
 package runsc
 
-type clientID struct {
-	UniqueProcess uintptr
-	UniqueThread  uintptr
-}
-
-type objectAttrs struct {
-	Length                   uintptr
-	RootDirectory            uintptr
-	ObjectName               uintptr
-	Attributes               uintptr
-	SecurityDescriptor       uintptr
-	SecurityQualityOfService uintptr
-}
-
 // Why are these not defined in the windows pkg?!
 
 // ProcessAllAccess is the PROCESS_ALL_ACCESS const from winnt.h
@@ -38,4 +24,4 @@ const SectionRWX = SectionWrite | SectionRead | SectionExecute
 var Suspended = false
 
 // Version is the package version
-const Version = "1.1.2"
+const Version = "1.2.0"

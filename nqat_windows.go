@@ -17,7 +17,7 @@ func nqatSetup(
 
 	// Ensure shellcode was provided
 	if len(sc) == 0 {
-		return 0, 0, hl.Errorf("No shellcode provided")
+		return 0, 0, hl.Errorf("runsc: no shellcode provided")
 	}
 
 	// Get process handle

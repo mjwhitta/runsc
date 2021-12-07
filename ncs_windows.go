@@ -17,7 +17,7 @@ func WithNtCreateSection(pid uint32, sc []byte) error {
 
 	// Ensure shellcode was provided
 	if len(sc) == 0 {
-		return hl.Errorf("No shellcode provided")
+		return hl.Errorf("runsc: no shellcode provided")
 	}
 
 	// Get process handle
@@ -45,7 +45,10 @@ func WithNtCreateSection(pid uint32, sc []byte) error {
 		windows.PAGE_READWRITE,
 	)
 	if e != nil {
-		return hl.Errorf("Error mapping RW view: %s", e.Error())
+		return hl.Errorf(
+			"runsc: error mapping RW view: %s",
+			e.Error(),
+		)
 	}
 
 	// Copy shellcode to RW view
@@ -70,7 +73,10 @@ func WithNtCreateSection(pid uint32, sc []byte) error {
 		windows.PAGE_EXECUTE_READ,
 	)
 	if e != nil {
-		return hl.Errorf("Error mapping RX view: %s", e.Error())
+		return hl.Errorf(
+			"runsc: error mapping RX view: %s",
+			e.Error(),
+		)
 	}
 
 	// Get handle for new thread

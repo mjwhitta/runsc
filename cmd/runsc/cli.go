@@ -11,6 +11,7 @@ import (
 
 // Flags
 type cliFlags struct {
+	min     bool
 	nocolor bool
 	pid     uint64
 	suspend bool
@@ -64,6 +65,13 @@ func init() {
 	cli.Title = "runsc"
 
 	// Parse cli flags
+	cli.Flag(
+		&flags.min,
+		"m",
+		"min",
+		false,
+		"Use minimal calc shellcode.",
+	)
 	cli.Flag(
 		&flags.nocolor,
 		"no-color",

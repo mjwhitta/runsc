@@ -21,6 +21,16 @@ const (
 	Exception
 )
 
+func getPayload() string {
+	var payload []string = calc
+
+	if flags.min {
+		payload = calcMin
+	}
+
+	return strings.Join(payload, "")
+}
+
 func main() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -38,7 +48,7 @@ func main() {
 	validate()
 
 	// Convert hex to shellcode
-	if sc, e = hex.DecodeString(strings.Join(calc, "")); e != nil {
+	if sc, e = hex.DecodeString(getPayload()); e != nil {
 		panic(e)
 	}
 
@@ -70,7 +80,7 @@ func main() {
 				panic(e)
 			}
 		default:
-			panic(hl.Errorf("Unsupported method"))
+			panic(hl.Errorf("runsc: unsupported method"))
 		}
 
 		time.Sleep(time.Second)

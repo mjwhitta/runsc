@@ -16,7 +16,7 @@ func WithNtAllocateVirtualMemory(pid uint32, sc []byte) error {
 
 	// Ensure shellcode was provided
 	if len(sc) == 0 {
-		return hl.Errorf("No shellcode provided")
+		return hl.Errorf("runsc: no shellcode provided")
 	}
 
 	// Get process handle

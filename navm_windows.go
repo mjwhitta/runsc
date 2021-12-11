@@ -3,7 +3,7 @@ package runsc
 import (
 	"golang.org/x/sys/windows"
 
-	hl "gitlab.com/mjwhitta/hilighter"
+	"gitlab.com/mjwhitta/errors"
 )
 
 // WithNtAllocateVirtualMemory will launch the provided shellcode
@@ -16,7 +16,7 @@ func WithNtAllocateVirtualMemory(pid uint32, sc []byte) error {
 
 	// Ensure shellcode was provided
 	if len(sc) == 0 {
-		return hl.Errorf("runsc: no shellcode provided")
+		return errors.New("no shellcode provided")
 	}
 
 	// Get process handle

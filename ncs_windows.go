@@ -3,7 +3,7 @@ package runsc
 import (
 	"golang.org/x/sys/windows"
 
-	hl "gitlab.com/mjwhitta/hilighter"
+	"gitlab.com/mjwhitta/errors"
 )
 
 // WithNtCreateSection will launch the provided shellcode using
@@ -17,7 +17,7 @@ func WithNtCreateSection(pid uint32, sc []byte) error {
 
 	// Ensure shellcode was provided
 	if len(sc) == 0 {
-		return hl.Errorf("runsc: no shellcode provided")
+		return errors.New("no shellcode provided")
 	}
 
 	// Get process handle
@@ -45,10 +45,7 @@ func WithNtCreateSection(pid uint32, sc []byte) error {
 		windows.PAGE_READWRITE,
 	)
 	if e != nil {
-		return hl.Errorf(
-			"runsc: error mapping RW view: %s",
-			e.Error(),
-		)
+		return e
 	}
 
 	// Copy shellcode to RW view
@@ -73,10 +70,7 @@ func WithNtCreateSection(pid uint32, sc []byte) error {
 		windows.PAGE_EXECUTE_READ,
 	)
 	if e != nil {
-		return hl.Errorf(
-			"runsc: error mapping RX view: %s",
-			e.Error(),
-		)
+		return e
 	}
 
 	// Get handle for new thread

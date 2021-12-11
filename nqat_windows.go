@@ -3,7 +3,7 @@ package runsc
 import (
 	"golang.org/x/sys/windows"
 
-	hl "gitlab.com/mjwhitta/hilighter"
+	"gitlab.com/mjwhitta/errors"
 )
 
 func nqatSetup(
@@ -17,7 +17,7 @@ func nqatSetup(
 
 	// Ensure shellcode was provided
 	if len(sc) == 0 {
-		return 0, 0, hl.Errorf("runsc: no shellcode provided")
+		return 0, 0, errors.New("no shellcode provided")
 	}
 
 	// Get process handle

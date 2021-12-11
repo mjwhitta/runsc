@@ -9,8 +9,19 @@ import (
 	"gitlab.com/mjwhitta/runsc"
 )
 
+// Exit status
+const (
+	Good = iota
+	InvalidOption
+	MissingOption
+	InvalidArgument
+	MissingArgument
+	ExtraArgument
+	Exception
+)
+
 // Flags
-type cliFlags struct {
+var flags struct {
 	min     bool
 	nocolor bool
 	pid     uint64
@@ -20,8 +31,6 @@ type cliFlags struct {
 	version bool
 	wait    bool
 }
-
-var flags cliFlags
 
 func init() {
 	// Configure cli package
@@ -37,9 +46,10 @@ func init() {
 			"Normally the exit status is 0. In the event of an error",
 			"the exit status will be one of the below:\n\n",
 			hl.Sprintf("%d: Invalid option\n", InvalidOption),
+			hl.Sprintf("%d: Missing option\n", MissingOption),
 			hl.Sprintf("%d: Invalid argument\n", InvalidArgument),
-			hl.Sprintf("%d: Missing arguments\n", MissingArguments),
-			hl.Sprintf("%d: Extra arguments\n", ExtraArguments),
+			hl.Sprintf("%d: Missing arguments\n", MissingArgument),
+			hl.Sprintf("%d: Extra arguments\n", ExtraArgument),
 			hl.Sprintf("%d: Exception", Exception),
 		},
 		" ",
@@ -104,7 +114,7 @@ func init() {
 		"v",
 		"verbose",
 		false,
-		"Show show stacktrace if error.",
+		"Show stacktrace, if error.",
 	)
 	cli.Flag(&flags.version, "V", "version", false, "Show version.")
 	cli.Flag(
@@ -130,8 +140,8 @@ func validate() {
 
 	// Validate cli flags
 	if cli.NArg() == 0 {
-		cli.Usage(MissingArguments)
+		cli.Usage(MissingArgument)
 	} else if cli.NArg() > 1 {
-		cli.Usage(ExtraArguments)
+		cli.Usage(ExtraArgument)
 	}
 }

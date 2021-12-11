@@ -11,16 +11,6 @@ import (
 	"gitlab.com/mjwhitta/runsc"
 )
 
-// Exit status
-const (
-	Good = iota
-	InvalidOption
-	InvalidArgument
-	MissingArguments
-	ExtraArguments
-	Exception
-)
-
 func getPayload() string {
 	var payload []string = calc
 

@@ -5,15 +5,11 @@ import (
 
 	"golang.org/x/sys/windows"
 
+	"gitlab.com/mjwhitta/errors"
 	hl "gitlab.com/mjwhitta/hilighter"
 )
 
-var ntdll *windows.LazyDLL
-
-func init() {
-	// Load DLLs
-	ntdll = windows.NewLazySystemDLL("ntdll")
-}
+var ntdll *windows.LazyDLL = windows.NewLazySystemDLL("ntdll")
 
 // NtAllocateVirtualMemory from ntdll.
 func NtAllocateVirtualMemory(
@@ -21,7 +17,8 @@ func NtAllocateVirtualMemory(
 	size uint64,
 	allocType uintptr,
 	protection uintptr,
-) (addr uintptr, e error) {
+) (uintptr, error) {
+	var addr uintptr
 	var err uintptr
 	var proc string = "NtAllocateVirtualMemory"
 
@@ -34,18 +31,17 @@ func NtAllocateVirtualMemory(
 		protection,
 	)
 	if err != 0 {
-		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
+		return 0, errors.Newf("%s returned %0x", proc, uint32(err))
 	} else if addr == 0 {
-		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
-	} else {
-		e = nil
+		return 0, errors.Newf("%s failed for unknown reason", proc)
 	}
 
 	// WTF?! Why is a Printf needed?! time.Sleep() doesn't work?
-	// Oh well, print newline and escape sequence for "go up 1 line"
+	// Printf("") doesn't work? Oh well, print newline and escape
+	// sequence for "go up 1 line"
 	hl.Printf("\n\x1b[1A")
 
-	return
+	return addr, nil
 }
 
 // NtCreateSection from ntdll.
@@ -69,9 +65,9 @@ func NtCreateSection(
 		0,
 	)
 	if err != 0 {
-		return hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
+		return errors.Newf("%s returned %0x", proc, uint32(err))
 	} else if *sHndl == 0 {
-		return hl.Errorf("runsc: %s failed for unknown reason", proc)
+		return errors.Newf("%s failed for unknown reason", proc)
 	}
 
 	return nil
@@ -84,9 +80,10 @@ func NtMapViewOfSection(
 	size uint64,
 	inheritPerms uintptr,
 	pagePerms uintptr,
-) (scBase uintptr, e error) {
+) (uintptr, error) {
 	var err uintptr
 	var proc string = "NtMapViewOfSection"
+	var scBase uintptr
 	var scOffset uintptr
 
 	err, _, _ = ntdll.NewProc(proc).Call(
@@ -102,22 +99,21 @@ func NtMapViewOfSection(
 		pagePerms,
 	)
 	if err != 0 {
-		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
+		return 0, errors.Newf("%s returned %0x", proc, uint32(err))
 	} else if scBase == 0 {
-		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
-	} else {
-		e = nil
+		return 0, errors.Newf("%s failed for unknown reason", proc)
 	}
 
-	return
+	return scBase, nil
 }
 
 // NtOpenProcess from ntdll.
 func NtOpenProcess(
 	pid uint32,
 	access uintptr,
-) (pHndl windows.Handle, e error) {
+) (windows.Handle, error) {
 	var err uintptr
+	var pHndl windows.Handle
 	var proc string = "NtOpenProcess"
 
 	err, _, _ = ntdll.NewProc(proc).Call(
@@ -127,14 +123,12 @@ func NtOpenProcess(
 		uintptr(unsafe.Pointer(&clientID{uintptr(pid), 0})),
 	)
 	if err != 0 {
-		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
+		return 0, errors.Newf("%s returned %0x", proc, uint32(err))
 	} else if pHndl == 0 {
-		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
-	} else {
-		e = nil
+		return 0, errors.Newf("%s failed for unknown reason", proc)
 	}
 
-	return
+	return pHndl, nil
 }
 
 // NtQueueApcThread from ntdll.
@@ -153,7 +147,7 @@ func NtQueueApcThread(
 		0, // arg3
 	)
 	if err != 0 {
-		return hl.Errorf("runsc: %s returned: %0x", proc, uint32(err))
+		return errors.Newf("%s returned %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -176,7 +170,7 @@ func NtQueueApcThreadEx(
 		0, // arg3
 	)
 	if err != 0 {
-		return hl.Errorf("runsc: %s returned: %0x", proc, uint32(err))
+		return errors.Newf("%s returned %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -192,7 +186,7 @@ func NtResumeThread(tHndl windows.Handle) error {
 		0, // previousSuspendCount
 	)
 	if err != 0 {
-		return hl.Errorf("runsc: %s returned: %0x", proc, uint32(err))
+		return errors.Newf("%s returned %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -214,7 +208,7 @@ func NtWriteVirtualMemory(
 		uintptr(len(b)),
 	)
 	if err != 0 {
-		return hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
+		return errors.Newf("%s returned %0x", proc, uint32(err))
 	}
 
 	return nil
@@ -225,10 +219,11 @@ func RtlCreateUserThread(
 	pHndl windows.Handle,
 	addr uintptr,
 	sspnd bool,
-) (tHndl windows.Handle, e error) {
+) (windows.Handle, error) {
 	var err uintptr
 	var proc string = "RtlCreateUserThread"
 	var suspend uintptr
+	var tHndl windows.Handle
 
 	if sspnd {
 		suspend = 1
@@ -247,12 +242,10 @@ func RtlCreateUserThread(
 		0,
 	)
 	if err != 0 {
-		e = hl.Errorf("runsc: %s returned %0x", proc, uint32(err))
+		return 0, errors.Newf("%s returned %0x", proc, uint32(err))
 	} else if tHndl == 0 {
-		e = hl.Errorf("runsc: %s failed for unknown reason", proc)
-	} else {
-		e = nil
+		return 0, errors.Newf("%s failed for unknown reason", proc)
 	}
 
-	return
+	return tHndl, nil
 }

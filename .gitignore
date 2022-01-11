@@ -1,7 +1,10 @@
 *.profile
 *.test
+.tags
 build
-cmd/*
-!cmd/runsc
+cover.out
 local
 tags
+
+cmd/*
+!cmd/runsc

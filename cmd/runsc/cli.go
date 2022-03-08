@@ -54,10 +54,11 @@ func init() {
 		},
 		" ",
 	)
-	cli.Info = strings.Join([]string{
-		"This tool will launch calc shellcode using the method",
-		"specified on the command-line.",
-	},
+	cli.Info = strings.Join(
+		[]string{
+			"This tool will launch calc shellcode using the method",
+			"specified on the command-line.",
+		},
 		" ",
 	)
 	cli.Section(

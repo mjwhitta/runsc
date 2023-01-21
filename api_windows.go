@@ -5,8 +5,8 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"gitlab.com/mjwhitta/errors"
-	hl "gitlab.com/mjwhitta/hilighter"
+	"github.com/mjwhitta/errors"
+	hl "github.com/mjwhitta/hilighter"
 )
 
 var ntdll *windows.LazyDLL = windows.NewLazySystemDLL("ntdll")

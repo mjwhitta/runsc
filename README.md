@@ -2,7 +2,7 @@
 
 <a href="https://www.buymeacoffee.com/mjwhitta">🍪 Buy me a cookie</a>
 
-[![Go Report Card](https://goreportcard.com/badge/gitlab.com/mjwhitta/runsc)](https://goreportcard.com/report/gitlab.com/mjwhitta/runsc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mjwhitta/runsc)](https://goreportcard.com/report/github.com/mjwhitta/runsc)
 
 ## What is this?
 
@@ -14,7 +14,7 @@ API (specifically functions that are not hooked by EDR solutions).
 Open a terminal and run the following:
 
 ```
-$ go get --ldflags="-s -w" --trimpath -u gitlab.com/mjwhitta/runsc
+$ go get --ldflags="-s -w" --trimpath -u github.com/mjwhitta/runsc
 ```
 
 ## Usage
@@ -23,4 +23,4 @@ See [main.go](cmd/runsc/main.go) for example usage.
 
 ## Links
 
-- [Source](https://gitlab.com/mjwhitta/runsc)
+- [Source](https://github.com/mjwhitta/runsc)

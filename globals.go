@@ -24,4 +24,4 @@ const SectionRWX = SectionWrite | SectionRead | SectionExecute
 var Suspended = false
 
 // Version is the package version
-const Version = "1.3.4"
+const Version = "1.3.5"

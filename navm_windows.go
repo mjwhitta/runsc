@@ -3,7 +3,7 @@ package runsc
 import (
 	"golang.org/x/sys/windows"
 
-	"gitlab.com/mjwhitta/errors"
+	"github.com/mjwhitta/errors"
 )
 
 // WithNtAllocateVirtualMemory will launch the provided shellcode

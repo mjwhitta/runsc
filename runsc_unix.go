@@ -3,7 +3,7 @@
 
 package runsc
 
-import "gitlab.com/mjwhitta/errors"
+import "github.com/mjwhitta/errors"
 
 // WithNtAllocateVirtualMemory is only supported for Windows
 func WithNtAllocateVirtualMemory(pid uint32, sc []byte) error {

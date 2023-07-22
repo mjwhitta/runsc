@@ -8,7 +8,8 @@
 ## What is this?
 
 This Go module allows you to inject shellcode using the Windows Native
-API (specifically functions that are not hooked by EDR solutions).
+API. At this time, there aren't a whole lot of options. In the future,
+it will be more configurable via an a la carte style launcher.
 
 ## How to install
 

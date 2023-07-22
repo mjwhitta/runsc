@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	"strings"
+	"runtime"
 
 	"github.com/mjwhitta/cli"
 	hl "github.com/mjwhitta/hilighter"
@@ -22,60 +22,80 @@ const (
 
 // Flags
 var flags struct {
+	alloc   string
 	min     bool
 	nocolor bool
 	pid     uint64
+	run     string
 	suspend bool
 	times   uint64
 	verbose bool
 	version bool
 	wait    bool
+	write   string
 }
 
 func init() {
+	var defAlloc string = "n/a"
+	var defRun string = "n/a"
+	var defWrite string = "n/a"
+
 	// Configure cli package
 	cli.Align = true
 	cli.Authors = []string{"Miles Whittaker <mj@whitta.dev>"}
-	cli.Banner = hl.Sprintf(
-		"%s [OPTIONS] <method>",
-		os.Args[0],
-	)
+	cli.Banner = hl.Sprintf("%s [OPTIONS]", os.Args[0])
 	cli.BugEmail = "runsc.bugs@whitta.dev"
-	cli.ExitStatus = strings.Join(
-		[]string{
-			"Normally the exit status is 0. In the event of an error",
-			"the exit status will be one of the below:\n\n",
-			hl.Sprintf("%d: Invalid option\n", InvalidOption),
-			hl.Sprintf("%d: Missing option\n", MissingOption),
-			hl.Sprintf("%d: Invalid argument\n", InvalidArgument),
-			hl.Sprintf("%d: Missing arguments\n", MissingArgument),
-			hl.Sprintf("%d: Extra arguments\n", ExtraArgument),
-			hl.Sprintf("%d: Exception", Exception),
-		},
-		" ",
+	cli.ExitStatus(
+		"Normally the exit status is 0. In the event of an error the",
+		"exit status will be one of the below:\n\n",
+		hl.Sprintf("%d: Invalid option\n", InvalidOption),
+		hl.Sprintf("%d: Missing option\n", MissingOption),
+		hl.Sprintf("%d: Invalid argument\n", InvalidArgument),
+		hl.Sprintf("%d: Missing arguments\n", MissingArgument),
+		hl.Sprintf("%d: Extra arguments\n", ExtraArgument),
+		hl.Sprintf("%d: Exception", Exception),
 	)
-	cli.Info = strings.Join(
-		[]string{
-			"This tool will launch calc shellcode using the method",
-			"specified on the command-line.",
-		},
-		" ",
+	cli.Info(
+		"This tool will launch calc shellcode using the allocation,",
+		"write, and run methods specified.",
 	)
-	cli.Section(
-		"METHODS",
-		strings.Join(
-			[]string{
-				"navm: NtAllocateVirtualMemory",
-				"ncs: NtCreateSection",
-				"nqat: NtQueueApcThread",
-				"nqate: NtQueueApcThreadEx",
-			},
-			"\n",
-		),
-	)
+
+	switch runtime.GOOS {
+	case "windows":
+		defAlloc = "navm"
+		defRun = "rcut"
+		defWrite = "nwvm"
+
+		cli.Section(
+			"ALLOCATION METHODS",
+			"navm: NtAllocateVirtualMemory\n",
+			"ncs: NtCreateSection",
+		)
+		cli.Section(
+			"RUN METHODS",
+			"nqat: NtQueueApcThread\n",
+			"nqate: NtQueueApcThreadEx\n",
+			"rcut: RtlCreateUserThread",
+		)
+		cli.Section(
+			"WRITE METHODS",
+			"nwvm: NtWriteVirtualMemory",
+		)
+	}
+
 	cli.Title = "runsc"
 
 	// Parse cli flags
+	cli.Flag(
+		&flags.alloc,
+		"a",
+		"alloc",
+		defAlloc,
+		hl.Sprintf(
+			"Specify memory allocation method (default: %s)",
+			defAlloc,
+		),
+	)
 	cli.Flag(
 		&flags.min,
 		"m",
@@ -95,6 +115,13 @@ func init() {
 		"pid",
 		0,
 		"Specify PID to inject calc into (default: 0 - self).",
+	)
+	cli.Flag(
+		&flags.run,
+		"r",
+		"run",
+		defRun,
+		hl.Sprintf("Specify execution method (default: %s)", defRun),
 	)
 	cli.Flag(
 		&flags.suspend,
@@ -120,10 +147,19 @@ func init() {
 	cli.Flag(&flags.version, "V", "version", false, "Show version.")
 	cli.Flag(
 		&flags.wait,
-		"w",
 		"wait",
 		false,
-		"Wait 20 secs before and 10 mins after (for debugging).",
+		"Wait 10 secs before and 10 mins after (for debugging).",
+	)
+	cli.Flag(
+		&flags.write,
+		"w",
+		"write",
+		defWrite,
+		hl.Sprintf(
+			"Specify memory write method (default: %s)",
+			defWrite,
+		),
 	)
 	cli.Parse()
 }
@@ -140,9 +176,7 @@ func validate() {
 	}
 
 	// Validate cli flags
-	if cli.NArg() == 0 {
-		cli.Usage(MissingArgument)
-	} else if cli.NArg() > 1 {
+	if cli.NArg() > 0 {
 		cli.Usage(ExtraArgument)
 	}
 }

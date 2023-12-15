@@ -92,7 +92,7 @@ func init() {
 		"alloc",
 		defAlloc,
 		hl.Sprintf(
-			"Specify memory allocation method (default: %s)",
+			"Specify memory allocation method (default: %s).",
 			defAlloc,
 		),
 	)
@@ -114,14 +114,14 @@ func init() {
 		"p",
 		"pid",
 		0,
-		"Specify PID to inject calc into (default: 0 - self).",
+		"Specify PID to inject calc into (default: 0 = self).",
 	)
 	cli.Flag(
 		&flags.run,
 		"r",
 		"run",
 		defRun,
-		hl.Sprintf("Specify execution method (default: %s)", defRun),
+		hl.Sprintf("Specify execution method (default: %s).", defRun),
 	)
 	cli.Flag(
 		&flags.suspend,
@@ -157,7 +157,7 @@ func init() {
 		"write",
 		defWrite,
 		hl.Sprintf(
-			"Specify memory write method (default: %s)",
+			"Specify memory write method (default: %s).",
 			defWrite,
 		),
 	)

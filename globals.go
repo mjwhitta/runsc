@@ -4,4 +4,4 @@ package runsc
 var Suspended = false // FIXME remove
 
 // Version is the package version
-const Version = "1.4.1"
+const Version = "1.4.2"

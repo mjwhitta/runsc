@@ -7,6 +7,6 @@ require (
 	github.com/mjwhitta/errors v1.0.2
 	github.com/mjwhitta/hilighter v1.11.7
 	github.com/mjwhitta/log v1.6.7
-	github.com/mjwhitta/win v0.12.3
-	golang.org/x/sys v0.16.0
+	github.com/mjwhitta/win v0.13.1
+	golang.org/x/sys v0.17.0
 )

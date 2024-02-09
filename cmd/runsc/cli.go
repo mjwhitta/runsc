@@ -167,7 +167,6 @@ func init() {
 // Process cli flags and ensure no issues
 func validate() {
 	hl.Disable(flags.nocolor)
-	runsc.Suspended = flags.suspend
 
 	// Short circuit if version was requested
 	if flags.version {

@@ -1,10 +1,12 @@
+/cmd/*
+!/cmd/runsc
 *.profile
 *.test
+.build
 .tags
+.vscode
 build
 cover.out
 local
 tags
-
-cmd/*
-!cmd/runsc
+vendor

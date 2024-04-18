@@ -6,7 +6,7 @@ github.com/mjwhitta/hilighter v1.11.9 h1:jC+44GMw9xe83cSypZKj3Q0+zWup/jblBw467L2
 github.com/mjwhitta/hilighter v1.11.9/go.mod h1:0db9WcxBNN3QKZZwoayq2OeQg7dJwwbCjxBEUjAyrKk=
 github.com/mjwhitta/log v1.6.9 h1:HHAHeSShnS8BlpjWgMf8RG9+sfiD1ndwj/nTvBZYXGQ=
 github.com/mjwhitta/log v1.6.9/go.mod h1:1Jivi6+ZSy484mNVS+eDRaAOk/ora8Su1J+CybLsKP8=
-github.com/mjwhitta/win v0.18.1 h1:Hw7uv0+uTDO0WjK0AGNXzA7BFcvw05uV7bANyj01624=
-github.com/mjwhitta/win v0.18.1/go.mod h1:uXq+fJvExvOtEMeQ4vFVvsXru/XXD9nhZop9pDTlsdg=
-golang.org/x/sys v0.18.0 h1:DBdB3niSjOA/O0blCZBqDefyWNYveAYMNF1Wum0DYQ4=
-golang.org/x/sys v0.18.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+github.com/mjwhitta/win v0.21.0 h1:9DLhVW1w3AUt/nAwpmJWjk3DH7j4MkhXfMHPJ5Sygag=
+github.com/mjwhitta/win v0.21.0/go.mod h1:uXq+fJvExvOtEMeQ4vFVvsXru/XXD9nhZop9pDTlsdg=
+golang.org/x/sys v0.19.0 h1:q5f1RH2jigJ1MoAWp2KTp3gm5zAGFUTarQZ5U386+4o=
+golang.org/x/sys v0.19.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=

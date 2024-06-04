@@ -1,3 +1,5 @@
+//go:build windows
+
 package main
 
 import (
@@ -10,6 +12,8 @@ func launch(sc []byte) error {
 	var l *runsc.Launcher = runsc.New()
 
 	switch flags.alloc {
+	case "heap":
+		l.AllocVia(runsc.HeapAlloc)
 	case "navm":
 		l.AllocVia(runsc.NtAllocateVirtualMemory)
 	case "ncs":

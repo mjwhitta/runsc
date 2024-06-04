@@ -1,3 +1,5 @@
+//go:build windows
+
 package runsc
 
 // Consts for supported run methods.
@@ -7,3 +9,9 @@ const (
 	NtQueueApcThreadEx
 	InvalidRun
 )
+
+func init() {
+	runMethods[RtlCreateUserThread] = runUserThread
+	runMethods[NtQueueApcThread] = runApcThread
+	runMethods[NtQueueApcThreadEx] = runApcThreadEx
+}

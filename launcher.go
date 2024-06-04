@@ -26,12 +26,39 @@ func (l *Launcher) AllocVia(a AllocMethod) *Launcher {
 // Exe will execute the shellcode using the Launcher as it's
 // configured.
 func (l *Launcher) Exe(sc []byte) error {
-	if e := l.validate(sc); e != nil {
+	var e error
+	var s *state
+
+	if e = l.validate(sc); e != nil {
 		return e
 	}
 
-	if e := l.exe(sc); e != nil {
+	if s, e = initState(l, sc); e != nil {
 		return e
+	}
+
+	if allocate, ok := allocMethods[l.alloc]; ok {
+		if s, e = allocate(s); e != nil {
+			return e
+		}
+	} else {
+		return errors.Newf("unknown allocation method: %d", l.alloc)
+	}
+
+	if write, ok := writeMethods[l.write]; ok {
+		if s, e = write(s, sc); e != nil {
+			return e
+		}
+	} else {
+		return errors.Newf("unknown write method: %d", l.write)
+	}
+
+	if run, ok := runMethods[l.run]; ok {
+		if _, e = run(s); e != nil {
+			return e
+		}
+	} else {
+		return errors.Newf("unknown run method: %d", l.run)
 	}
 
 	return nil

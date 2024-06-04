@@ -1,8 +1,17 @@
+//go:build windows
+
 package runsc
 
 // Consts for supported allocation methods.
 const (
-	NtAllocateVirtualMemory AllocMethod = iota
+	HeapAlloc AllocMethod = iota
+	NtAllocateVirtualMemory
 	NtCreateSection
 	InvalidAlloc
 )
+
+func init() {
+	allocMethods[HeapAlloc] = allocHeap
+	allocMethods[NtAllocateVirtualMemory] = allocStack
+	allocMethods[NtCreateSection] = allocSection
+}

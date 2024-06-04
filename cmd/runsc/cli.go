@@ -68,13 +68,14 @@ func init() {
 
 		cli.Section(
 			"ALLOCATION METHODS",
+			"heap: HeapCreate, HeapAlloc (PID 0 only)\n",
 			"navm: NtAllocateVirtualMemory\n",
 			"ncs: NtCreateSection",
 		)
 		cli.Section(
 			"RUN METHODS",
 			"nqat: NtQueueApcThread\n",
-			"nqate: NtQueueApcThreadEx\n",
+			"nqate: NtQueueApcThreadEx (unstable)\n",
 			"rcut: RtlCreateUserThread",
 		)
 		cli.Section(

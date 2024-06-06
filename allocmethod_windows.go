@@ -4,10 +4,9 @@ package runsc
 
 // Consts for supported allocation methods.
 const (
-	HeapAlloc AllocMethod = iota
+	HeapAlloc AllocMethod = iota + 1
 	NtAllocateVirtualMemory
 	NtCreateSection
-	InvalidAlloc
 )
 
 var allocMethods map[AllocMethod]aFunc = map[AllocMethod]aFunc{

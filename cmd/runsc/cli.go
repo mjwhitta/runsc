@@ -22,7 +22,6 @@ const (
 // Flags
 var flags struct {
 	alloc   string
-	min     bool
 	nocolor bool
 	pid     uint64
 	run     string
@@ -30,7 +29,6 @@ var flags struct {
 	times   uint64
 	verbose bool
 	version bool
-	wait    bool
 	write   string
 }
 
@@ -69,13 +67,6 @@ func init() {
 			"Specify memory allocation method (default: %s).",
 			defAlloc,
 		),
-	)
-	cli.Flag(
-		&flags.min,
-		"m",
-		"min",
-		false,
-		"Use minimal calc shellcode.",
 	)
 	cli.Flag(
 		&flags.nocolor,
@@ -119,12 +110,6 @@ func init() {
 		"Show stacktrace, if error.",
 	)
 	cli.Flag(&flags.version, "V", "version", false, "Show version.")
-	cli.Flag(
-		&flags.wait,
-		"wait",
-		false,
-		"Wait 10 secs before and 10 mins after (for debugging).",
-	)
 	cli.Flag(
 		&flags.write,
 		"w",

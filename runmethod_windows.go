@@ -4,13 +4,12 @@ package runsc
 
 // Consts for supported run methods.
 const (
-	CertEnumPhysicalStore RunMethod = iota
+	CertEnumPhysicalStore RunMethod = iota + 1
 	CertEnumSystemStore
 	NtCreateThreadEx
 	NtQueueApcThread
 	NtQueueApcThreadEx
 	RtlCreateUserThread
-	InvalidRun
 )
 
 var runMethods map[RunMethod]rFunc = map[RunMethod]rFunc{

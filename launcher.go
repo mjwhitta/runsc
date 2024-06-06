@@ -97,15 +97,15 @@ func (l *Launcher) Suspend(s ...bool) *Launcher {
 }
 
 func (l *Launcher) validate(sc []byte) error {
-	if l.alloc >= InvalidAlloc {
+	if _, ok := allocMethods[l.alloc]; !ok {
 		return errors.New("invalid allocation method provided")
 	}
 
-	if l.write >= InvalidWrite {
+	if _, ok := writeMethods[l.write]; !ok {
 		return errors.New("invalid write method provided")
 	}
 
-	if l.run >= InvalidRun {
+	if _, ok := runMethods[l.run]; !ok {
 		return errors.New("invalid run method provided")
 	}
 

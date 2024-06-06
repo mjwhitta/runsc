@@ -24,14 +24,12 @@ var (
 	defWrite string            = "nwvm"
 	rMethods map[string]method = map[string]method{
 		"ceps": {
-			desc: "CertEnumPhysicalStore (must use -m, no suspend)",
+			desc: "CertEnumPhysicalStore (no suspend)",
 			val:  int(runsc.CertEnumPhysicalStore),
 		},
 		"cess": {
-			desc: "" +
-				"CertEnumSystemStore (dangerous, must use -m, no " +
-				"suspend)",
-			val: int(runsc.CertEnumSystemStore),
+			desc: "CertEnumSystemStore (dangerous, no suspend)",
+			val:  int(runsc.CertEnumSystemStore),
 		},
 		"ncte": {
 			desc: "NtCreateThreadEx",

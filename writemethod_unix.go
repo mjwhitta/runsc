@@ -6,3 +6,5 @@ package runsc
 const (
 	InvalidWrite WriteMethod = iota
 )
+
+var writeMethods map[WriteMethod]wFunc = map[WriteMethod]wFunc{}

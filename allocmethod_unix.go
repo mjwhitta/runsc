@@ -6,3 +6,5 @@ package runsc
 const (
 	InvalidAlloc AllocMethod = iota
 )
+
+var allocMethods map[AllocMethod]aFunc = map[AllocMethod]aFunc{}

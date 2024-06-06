@@ -10,8 +10,8 @@ const (
 	InvalidAlloc
 )
 
-func init() {
-	allocMethods[HeapAlloc] = allocHeap
-	allocMethods[NtAllocateVirtualMemory] = allocStack
-	allocMethods[NtCreateSection] = allocSection
+var allocMethods map[AllocMethod]aFunc = map[AllocMethod]aFunc{
+	HeapAlloc:               allocHeap,
+	NtAllocateVirtualMemory: allocStack,
+	NtCreateSection:         allocSection,
 }

@@ -2,58 +2,58 @@
 
 package main
 
-import (
-	hl "github.com/mjwhitta/hilighter"
-	"github.com/mjwhitta/log"
-	"github.com/mjwhitta/runsc"
+import "github.com/mjwhitta/runsc"
+
+var (
+	aMethods map[string]method = map[string]method{
+		"heap": {
+			desc: "HeapCreate, HeapAlloc (PID 0 only)",
+			val:  int(runsc.HeapAlloc),
+		},
+		"navm": {
+			desc: "NtAllocateVirtualMemory",
+			val:  int(runsc.NtAllocateVirtualMemory),
+		},
+		"ncs": {
+			desc: "NtCreateSeciton",
+			val:  int(runsc.NtCreateSection),
+		},
+	}
+	defAlloc string            = "navm"
+	defRun   string            = "ncte"
+	defWrite string            = "nwvm"
+	rMethods map[string]method = map[string]method{
+		"ceps": {
+			desc: "CertEnumPhysicalStore (must use -m, no suspend)",
+			val:  int(runsc.CertEnumPhysicalStore),
+		},
+		"cess": {
+			desc: "" +
+				"CertEnumSystemStore (dangerous, must use -m, no " +
+				"suspend)",
+			val: int(runsc.CertEnumSystemStore),
+		},
+		"ncte": {
+			desc: "NtCreateThreadEx",
+			val:  int(runsc.NtCreateThreadEx),
+		},
+		"nqat": {
+			desc: "NtQueueApcThread",
+			val:  int(runsc.NtQueueApcThread),
+		},
+		"nqate": {
+			desc: "NtQueueApcThreadEx (unstable)",
+			val:  int(runsc.NtQueueApcThreadEx),
+		},
+		"rcut": {
+			desc: "RtlCreateUserThread",
+			val:  int(runsc.RtlCreateUserThread),
+		},
+	}
+	wMethods map[string]method = map[string]method{
+		"nwvm": {
+			desc: "NtWriteVirtualMemory",
+			val:  int(runsc.NtWriteVirtualMemory),
+		},
+	}
 )
-
-func launch(sc []byte) error {
-	var l *runsc.Launcher = runsc.New()
-
-	switch flags.alloc {
-	case "heap":
-		l.AllocVia(runsc.HeapAlloc)
-	case "navm":
-		l.AllocVia(runsc.NtAllocateVirtualMemory)
-	case "ncs":
-		l.AllocVia(runsc.NtCreateSection)
-	default:
-		return hl.Errorf("unsupported alloc method: %s", flags.alloc)
-	}
-
-	l.InPID(uint32(flags.pid))
-
-	switch flags.run {
-	case "nqat":
-		l.RunVia(runsc.NtQueueApcThread)
-	case "nqate":
-		l.RunVia(runsc.NtQueueApcThreadEx)
-	case "rcut":
-		l.RunVia(runsc.RtlCreateUserThread)
-	default:
-		return hl.Errorf("unsupported run method: %s", flags.run)
-	}
-
-	l.Suspend(flags.suspend)
-
-	switch flags.write {
-	case "nwvm":
-		l.WriteVia(runsc.NtWriteVirtualMemory)
-	default:
-		return hl.Errorf("unsupported write method: %s", flags.write)
-	}
-
-	log.Infof(
-		"Launching calc in %d: %s->%s->%s",
-		flags.pid,
-		flags.alloc,
-		flags.write,
-		flags.run,
-	)
-	if e := l.Exe(sc); e != nil {
-		return e
-	}
-
-	return nil
-}

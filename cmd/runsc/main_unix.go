@@ -2,8 +2,17 @@
 
 package main
 
-import hl "github.com/mjwhitta/hilighter"
-
-func launch(sc []byte) error {
-	return hl.Errorf("unsupported OS")
-}
+var (
+	aMethods map[string]method = map[string]method{
+		"none": {"Unsupported OS", 0},
+	}
+	defAlloc string            = "n/a"
+	defRun   string            = "n/a"
+	defWrite string            = "n/a"
+	rMethods map[string]method = map[string]method{
+		"none": {"Unsupported OS", 0},
+	}
+	wMethods map[string]method = map[string]method{
+		"none": {"Unsupported OS", 0},
+	}
+)

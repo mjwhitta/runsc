@@ -6,3 +6,5 @@ package runsc
 const (
 	InvalidRun RunMethod = iota
 )
+
+var runMethods map[RunMethod]rFunc = map[RunMethod]rFunc{}

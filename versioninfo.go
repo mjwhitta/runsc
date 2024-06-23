@@ -1,3 +1,3 @@
 package runsc
 
-//go:generate goversioninfo --64
+//go:generate goversioninfo --platform-specific

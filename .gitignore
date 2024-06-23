@@ -8,5 +8,6 @@
 build
 cover.out
 local
+resource.syso
 tags
 vendor

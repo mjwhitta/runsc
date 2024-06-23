@@ -21,7 +21,7 @@
 	"StringFileInfo": {
 		"Comments": "",
 		"CompanyName": "Nation-State",
-		"FileDescription": "Run shellcode",
+		"FileDescription": "",
 		"FileVersion": "1.5.0.0",
 		"InternalName": "runsc",
 		"LegalCopyright": "",

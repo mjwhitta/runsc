@@ -52,9 +52,9 @@ func init() {
 		"This tool will launch calc shellcode using the allocation,",
 		"write, and run methods specified.",
 	)
-	cli.Section("ALLOCATION METHODS", stringify(aMethods))
-	cli.Section("RUN METHODS", stringify(rMethods))
-	cli.Section("WRITE METHODS", stringify(wMethods))
+	cli.SectionAligned("ALLOCATION METHODS", "|", stringify(aMethods))
+	cli.SectionAligned("RUN METHODS", "|", stringify(rMethods))
+	cli.SectionAligned("WRITE METHODS", "|", stringify(wMethods))
 	cli.Title = "runsc"
 
 	// Parse cli flags

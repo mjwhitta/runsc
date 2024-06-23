@@ -31,6 +31,10 @@ var (
 			desc: "CertEnumSystemStore (dangerous, no suspend)",
 			val:  int(runsc.CertEnumSystemStore),
 		},
+		"cf2": {
+			desc: "CopyFile2 (PID 0 only, no suspend)",
+			val:  int(runsc.CopyFile2),
+		},
 		"ncte": {
 			desc: "NtCreateThreadEx",
 			val:  int(runsc.NtCreateThreadEx),

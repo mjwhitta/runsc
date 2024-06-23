@@ -37,28 +37,16 @@ func (l *Launcher) Exe(sc []byte) error {
 		return e
 	}
 
-	if allocate, ok := allocMethods[l.alloc]; ok {
-		if s, e = allocate(s); e != nil {
-			return e
-		}
-	} else {
-		return errors.Newf("unknown allocation method: %d", l.alloc)
+	if s, e = allocMethods[l.alloc](s); e != nil {
+		return e
 	}
 
-	if write, ok := writeMethods[l.write]; ok {
-		if s, e = write(s, sc); e != nil {
-			return e
-		}
-	} else {
-		return errors.Newf("unknown write method: %d", l.write)
+	if s, e = writeMethods[l.write](s, sc); e != nil {
+		return e
 	}
 
-	if run, ok := runMethods[l.run]; ok {
-		if _, e = run(s); e != nil {
-			return e
-		}
-	} else {
-		return errors.Newf("unknown run method: %d", l.run)
+	if _, e = runMethods[l.run](s); e != nil {
+		return e
 	}
 
 	return nil
@@ -97,6 +85,10 @@ func (l *Launcher) Suspend(s ...bool) *Launcher {
 }
 
 func (l *Launcher) validate(sc []byte) error {
+	if len(sc) == 0 {
+		return errors.New("no shellcode provided")
+	}
+
 	if _, ok := allocMethods[l.alloc]; !ok {
 		return errors.New("invalid allocation method provided")
 	}
@@ -107,10 +99,6 @@ func (l *Launcher) validate(sc []byte) error {
 
 	if _, ok := runMethods[l.run]; !ok {
 		return errors.New("invalid run method provided")
-	}
-
-	if len(sc) == 0 {
-		return errors.New("no shellcode provided")
 	}
 
 	return nil

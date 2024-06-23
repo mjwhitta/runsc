@@ -35,7 +35,7 @@ func stringify(m map[string]method) string {
 	)
 
 	for _, key := range keys {
-		out = append(out, key+": "+m[key].desc)
+		out = append(out, key+"|"+m[key].desc)
 	}
 
 	return strings.Join(out, "\n")

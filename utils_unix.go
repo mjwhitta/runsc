@@ -2,6 +2,6 @@
 
 package runsc
 
-func initState(l *Launcher, sc []byte) (*state, error) {
+func initState(l *Launcher, _ []byte) (*state, error) {
 	return &state{l: l}, nil
 }

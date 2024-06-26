@@ -35,6 +35,10 @@ var (
 			desc: "CopyFile2 (PID 0 only, no suspend)",
 			val:  int(runsc.CopyFile2),
 		},
+		"ewsw": {
+			desc: "EnumWindowStationsW (PID 0 only, no suspend)",
+			val:  int(runsc.EnumWindowStationsW),
+		},
 		"ncte": {
 			desc: "NtCreateThreadEx",
 			val:  int(runsc.NtCreateThreadEx),

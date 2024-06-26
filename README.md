@@ -16,7 +16,10 @@ it will be more configurable via an a la carte style launcher.
 Open a terminal and run the following:
 
 ```
-$ go get --ldflags "-s -w" --trimpath -u github.com/mjwhitta/runsc
+$ git clone https://github.com/mjwhitta/runsc.git
+$ cd ./runsc
+$ git submodule update --init
+$ make GOOS=windows cgo
 ```
 
 ## Usage

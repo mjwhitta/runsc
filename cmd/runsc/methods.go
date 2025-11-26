@@ -7,7 +7,7 @@ import (
 
 type method struct {
 	desc string
-	val  int
+	val  uint
 }
 
 func stringify(m map[string]method) string {

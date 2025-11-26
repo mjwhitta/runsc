@@ -1,3 +1,4 @@
+//nolint:wrapcheck // I don't wrap errors in the main package
 package main
 
 import (
@@ -16,6 +17,7 @@ func launch(sc []byte) error {
 		l.AllocVia(runsc.AllocMethod(aMethods[flags.alloc].val))
 	}
 
+	//nolint:gosec // G115 - already checked in validate()
 	l.InPID(uint32(flags.pid))
 
 	if _, ok := rMethods[flags.run]; ok {
@@ -35,6 +37,7 @@ func launch(sc []byte) error {
 		flags.write,
 		flags.run,
 	)
+
 	if e := l.Exe(sc); e != nil {
 		return e
 	}
@@ -46,9 +49,15 @@ func main() {
 	defer func() {
 		if r := recover(); r != nil {
 			if flags.verbose {
-				panic(r.(error).Error())
+				panic(r)
 			}
-			log.ErrX(Exception, r.(error).Error())
+
+			switch r := r.(type) {
+			case error:
+				log.ErrX(Exception, r.Error())
+			case string:
+				log.ErrX(Exception, r)
+			}
 		}
 	}()
 
@@ -62,7 +71,7 @@ func main() {
 		panic(e)
 	}
 
-	for i := 0; i < int(flags.times); i++ {
+	for range flags.times {
 		if e = launch(sc); e != nil {
 			panic(e)
 		}

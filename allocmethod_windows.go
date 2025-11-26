@@ -33,17 +33,17 @@ func allocHeap(s *state) (*state, error) {
 	s.heap, e = w32.HeapCreate(
 		w32.Winnt.HeapCreateEnableExecute,
 		0,
-		s.sz,
+		0, // Can grow as needed
 	)
 	if e != nil {
-		e = errors.Newf("failed to allocate memory: %w", e)
+		e = errors.Newf("failed to create memory: %w", e)
 		return nil, e
 	}
 
 	s.addr, e = w32.HeapAlloc(
 		s.heap,
 		w32.Winnt.HeapZeroMemory,
-		s.sz,
+		uintptr(s.sz),
 	)
 	if e != nil {
 		e = errors.Newf("failed to allocate memory: %w", e)
@@ -65,7 +65,7 @@ func allocSection(s *state) (*state, error) {
 	e = w32.NtCreateSection(
 		&s.section,
 		rwx,
-		uint64(s.sz),
+		s.sz,
 		w32.Winnt.PageExecuteReadwrite,
 		w32.Winnt.SecCommit,
 	)
@@ -78,7 +78,7 @@ func allocSection(s *state) (*state, error) {
 	s.addr, e = w32.NtMapViewOfSection(
 		s.section,
 		windows.CurrentProcess(),
-		uint64(s.sz),
+		s.sz,
 		w32.Accctrl.SubContainersOnlyInherit,
 		w32.Winnt.PageReadwrite,
 	)
@@ -95,7 +95,7 @@ func allocStack(s *state) (*state, error) {
 
 	s.addr, e = w32.NtAllocateVirtualMemory(
 		s.proc,
-		uint64(s.sz),
+		s.sz,
 		w32.Winnt.MemCommit|w32.Winnt.MemReserve,
 		w32.Winnt.PageExecuteReadwrite,
 	)

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"math"
 	"os"
+	"path/filepath"
 
 	"github.com/mjwhitta/cli"
 	hl "github.com/mjwhitta/hilighter"
@@ -36,17 +39,18 @@ func init() {
 	// Configure cli package
 	cli.Align = true
 	cli.Authors = []string{"Miles Whittaker <mj@whitta.dev>"}
-	cli.Banner = hl.Sprintf("%s [OPTIONS]", os.Args[0])
+	cli.Banner = filepath.Base(os.Args[0]) + " [OPTIONS]"
 	cli.BugEmail = "runsc.bugs@whitta.dev"
+
 	cli.ExitStatus(
 		"Normally the exit status is 0. In the event of an error the",
 		"exit status will be one of the below:\n\n",
-		hl.Sprintf("%d: Invalid option\n", InvalidOption),
-		hl.Sprintf("%d: Missing option\n", MissingOption),
-		hl.Sprintf("%d: Invalid argument\n", InvalidArgument),
-		hl.Sprintf("%d: Missing arguments\n", MissingArgument),
-		hl.Sprintf("%d: Extra arguments\n", ExtraArgument),
-		hl.Sprintf("%d: Exception", Exception),
+		fmt.Sprintf("%d: Invalid option\n", InvalidOption),
+		fmt.Sprintf("%d: Missing option\n", MissingOption),
+		fmt.Sprintf("%d: Invalid argument\n", InvalidArgument),
+		fmt.Sprintf("%d: Missing arguments\n", MissingArgument),
+		fmt.Sprintf("%d: Extra arguments\n", ExtraArgument),
+		fmt.Sprintf("%d: Exception", Exception),
 	)
 	cli.Info(
 		"This tool will launch calc shellcode using the allocation,",
@@ -55,6 +59,7 @@ func init() {
 	cli.SectionAligned("ALLOCATION METHODS", "|", stringify(aMethods))
 	cli.SectionAligned("RUN METHODS", "|", stringify(rMethods))
 	cli.SectionAligned("WRITE METHODS", "|", stringify(wMethods))
+
 	cli.Title = "runsc"
 
 	// Parse cli flags
@@ -63,7 +68,7 @@ func init() {
 		"a",
 		"alloc",
 		defAlloc,
-		hl.Sprintf(
+		fmt.Sprintf(
 			"Specify memory allocation method (default: %s).",
 			defAlloc,
 		),
@@ -79,14 +84,17 @@ func init() {
 		"p",
 		"pid",
 		0,
-		"Specify PID to inject calc into (default: 0 = self).",
+		"Specify uint32 PID to inject calc into (default: 0 = self).",
 	)
 	cli.Flag(
 		&flags.run,
 		"r",
 		"run",
 		defRun,
-		hl.Sprintf("Specify execution method (default: %s).", defRun),
+		fmt.Sprintf(
+			"Specify execution method (default: %s).",
+			defRun,
+		),
 	)
 	cli.Flag(
 		&flags.suspend,
@@ -115,7 +123,7 @@ func init() {
 		"w",
 		"write",
 		defWrite,
-		hl.Sprintf(
+		fmt.Sprintf(
 			"Specify memory write method (default: %s).",
 			defWrite,
 		),
@@ -129,8 +137,14 @@ func validate() {
 
 	// Short circuit if version was requested
 	if flags.version {
-		hl.Printf("runsc version %s\n", runsc.Version)
+		fmt.Println(
+			filepath.Base(os.Args[0]) + " version " + runsc.Version,
+		)
 		os.Exit(Good)
+	}
+
+	if flags.pid > math.MaxUint32 {
+		cli.Usage(InvalidOption)
 	}
 
 	// Validate cli flags

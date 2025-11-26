@@ -10,6 +10,6 @@ type state struct {
 	l       *Launcher
 	proc    windows.Handle
 	section windows.Handle
-	sz      int
+	sz      uint64
 	thread  windows.Handle
 }

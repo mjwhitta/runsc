@@ -8,15 +8,15 @@ var (
 	aMethods map[string]method = map[string]method{
 		"heap": {
 			desc: "HeapCreate, HeapAlloc (PID 0 only)",
-			val:  int(runsc.HeapAlloc),
+			val:  uint(runsc.HeapAlloc),
 		},
 		"navm": {
 			desc: "NtAllocateVirtualMemory",
-			val:  int(runsc.NtAllocateVirtualMemory),
+			val:  uint(runsc.NtAllocateVirtualMemory),
 		},
 		"ncs": {
 			desc: "NtCreateSeciton",
-			val:  int(runsc.NtCreateSection),
+			val:  uint(runsc.NtCreateSection),
 		},
 	}
 	defAlloc string            = "navm"
@@ -25,41 +25,41 @@ var (
 	rMethods map[string]method = map[string]method{
 		"ceps": {
 			desc: "CertEnumPhysicalStore (no suspend)",
-			val:  int(runsc.CertEnumPhysicalStore),
+			val:  uint(runsc.CertEnumPhysicalStore),
 		},
 		"cess": {
 			desc: "CertEnumSystemStore (dangerous, no suspend)",
-			val:  int(runsc.CertEnumSystemStore),
+			val:  uint(runsc.CertEnumSystemStore),
 		},
 		"cf2": {
 			desc: "CopyFile2 (PID 0 only, no suspend)",
-			val:  int(runsc.CopyFile2),
+			val:  uint(runsc.CopyFile2),
 		},
 		"ewsw": {
 			desc: "EnumWindowStationsW (PID 0 only, no suspend)",
-			val:  int(runsc.EnumWindowStationsW),
+			val:  uint(runsc.EnumWindowStationsW),
 		},
 		"ncte": {
 			desc: "NtCreateThreadEx",
-			val:  int(runsc.NtCreateThreadEx),
+			val:  uint(runsc.NtCreateThreadEx),
 		},
 		"nqat": {
 			desc: "NtQueueApcThread",
-			val:  int(runsc.NtQueueApcThread),
+			val:  uint(runsc.NtQueueApcThread),
 		},
 		"nqate": {
 			desc: "NtQueueApcThreadEx (unstable)",
-			val:  int(runsc.NtQueueApcThreadEx),
+			val:  uint(runsc.NtQueueApcThreadEx),
 		},
 		"rcut": {
 			desc: "RtlCreateUserThread",
-			val:  int(runsc.RtlCreateUserThread),
+			val:  uint(runsc.RtlCreateUserThread),
 		},
 	}
 	wMethods map[string]method = map[string]method{
 		"nwvm": {
 			desc: "NtWriteVirtualMemory",
-			val:  int(runsc.NtWriteVirtualMemory),
+			val:  uint(runsc.NtWriteVirtualMemory),
 		},
 	}
 )

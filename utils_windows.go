@@ -31,7 +31,7 @@ func getProcessHandle(s *state) (*state, error) {
 
 func initState(l *Launcher, sc []byte) (*state, error) {
 	var e error
-	var s *state = &state{l: l, sz: len(sc)}
+	var s *state = &state{l: l, sz: uint64(len(sc))}
 
 	if s, e = getProcessHandle(s); e != nil {
 		return nil, e

